@@ -1,0 +1,9 @@
+{
+  "name": "common-send-code",
+  "version": "1.0.0",
+  "description": "发送短信验证码云函数",
+  "main": "index.js",
+  "dependencies": {
+    "@alicloud/pop-core": "^1.7.12"
+  }
+}

@@ -1,0 +1,31 @@
+{
+	"passwordSecret": "4654654asdasd98a4s98d4as984d16asd546asd4s8a9d",
+	"tokenSecret": "879asdw3d4s98d4as984d16asd546asd4s8a9d",
+	"tokenExpiresIn": 7200,
+	"passwordErrorLimit": 6,
+	"passwordErrorRetryTime": 3600,
+	"app": {
+		"tokenExpiresIn": 2592000
+	},
+	"mp-weixin": {
+		"oauth": {
+			"weixin": {
+				"appid": "wx4b1081e94184f8c9",
+				"appsecret": "db7d1e14faeee87082cdb8c7bf7f668a"
+			}
+		}
+	},
+	"service": {
+		"sms": {
+			"name": "你的短信供应商名称",
+			"codeExpiresIn": 180,
+			"smsKey": "短信密钥key",
+			"smsSecret": "短信密钥secret"
+		},
+		"univerify": {
+			"appid": "univerifyAppid",
+			"apiKey": "univerifyApiKey",
+			"apiSecret": "univerifyApiSecret"
+		}
+	}
+}
