@@ -72,7 +72,11 @@
     },
     {
       "path": "pages/login/login",
-      "type": "page"
+      "type": "page",
+      "layout": "default",
+      "style": {
+        "navigationBarTitleText": "登录"
+      }
     }
   ],
   "subPackages": []
