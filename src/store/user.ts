@@ -81,7 +81,9 @@ export const useUserStore = defineStore(
      */
     const logout = async () => {
       _logout()
-      removeUserInfo()
+      userInfo.value = { ...userInfoState }
+      uni.removeStorageSync('userInfo')
+      uni.removeStorageSync('token')
     }
     /**
      * 微信登录

@@ -69,6 +69,10 @@
       "style": {
         "navigationBarTitleText": "Alova 请求演示"
       }
+    },
+    {
+      "path": "pages/login/login",
+      "type": "page"
     }
   ],
   "subPackages": []
