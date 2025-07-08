@@ -1,17 +1,10 @@
-import type { IUserInfoVo } from '@/api/types/login'
+// src/store/user.ts中添加或修改微信登录相关代码
+
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import {
-  getUserInfo as _getUserInfo,
-  login as _login,
-  logout as _logout,
-  wxLogin as _wxLogin,
-  getWxCode,
-} from '@/api/login'
-import { toast } from '@/utils/toast'
 
-// 初始化状态
-const userInfoState: IUserInfoVo = {
+// 用户信息初始状态
+const userInfoState = {
   id: 0,
   username: '',
   avatar: '/static/images/default-avatar.png',
@@ -21,90 +14,96 @@ const userInfoState: IUserInfoVo = {
 export const useUserStore = defineStore(
   'user',
   () => {
-    // 定义用户信息
-    const userInfo = ref<IUserInfoVo>({ ...userInfoState })
+    const userInfo = ref({ ...userInfoState })
+
     // 设置用户信息
-    const setUserInfo = (val: IUserInfoVo) => {
-      console.log('设置用户信息', val)
-      // 若头像为空 则使用默认头像
-      if (!val.avatar) {
+    const setUserInfo = (val) => {
+      if (!val.avatar)
         val.avatar = userInfoState.avatar
-      }
-      else {
-        val.avatar = 'https://oss.laf.run/ukw0y1-site/avatar.jpg?feige'
-      }
       userInfo.value = val
     }
-    const setUserAvatar = (avatar: string) => {
-      userInfo.value.avatar = avatar
-      console.log('设置用户头像', avatar)
-      console.log('userInfo', userInfo.value)
-    }
-    // 删除用户信息
-    const removeUserInfo = () => {
-      userInfo.value = { ...userInfoState }
-      uni.removeStorageSync('userInfo')
-      uni.removeStorageSync('token')
-    }
-    /**
-     * 获取用户信息
-     */
+
     const getUserInfo = async () => {
-      const res = await _getUserInfo()
-      const userInfo = res.data
-      setUserInfo(userInfo)
-      uni.setStorageSync('userInfo', userInfo)
-      uni.setStorageSync('token', userInfo.token)
-      // TODO 这里可以增加获取用户路由的方法 根据用户的角色动态生成路由
-      return res
-    }
-    /**
-     * 用户登录
-     * @param credentials 登录参数
-     * @returns R<IUserLogin>
-     */
-    const login = async (credentials: {
-      username: string
-      password: string
-      code: string
-      uuid: string
-    }) => {
-      const res = await _login(credentials)
-      console.log('登录信息', res)
-      toast.success('登录成功')
-      await getUserInfo()
-      return res
+      const result = await uniCloud.callFunction({
+        name: 'uni-id-cf',
+        data: { action: 'getUserInfo' },
+      })
+      return result.result
     }
 
-    /**
-     * 退出登录 并 删除用户信息
-     */
+    // 微信小程序登录
+    const wxMiniProgramLogin = async () => {
+      try {
+        // 获取微信登录凭证
+        const { code } = await uni.login({ provider: 'weixin' })
+
+        console.log('code', code)
+
+        // 调用云函数进行登录
+        const result = await uniCloud.callFunction({
+          name: 'uni-id-cf',
+          data: {
+            action: 'loginByWeixin',
+            params: { code },
+          },
+        })
+
+        if (result.result.code === 0) {
+          // 保存token和用户信息
+          uni.setStorageSync('uni_id_token', result.result.token)
+          uni.setStorageSync('uni_id_token_expired', result.result.tokenExpired)
+
+          // 更新store中的用户信息
+          setUserInfo({
+            id: result.result.uid,
+            username: result.result.userInfo.nickname || '微信用户',
+            avatar: result.result.userInfo.avatar_file?.url || userInfoState.avatar,
+            token: result.result.token,
+          })
+
+          return result.result
+        }
+        else {
+          throw new Error(result.result.message || '登录失败')
+        }
+      }
+      catch (error) {
+        console.error('微信登录失败:', error)
+        throw error
+      }
+    }
+
+    // 检查登录状态
+    const checkLoginStatus = () => {
+      const token = uni.getStorageSync('uni_id_token')
+      const tokenExpired = uni.getStorageSync('uni_id_token_expired')
+
+      // 检查token是否存在且未过期
+      if (token && tokenExpired && tokenExpired > Date.now()) {
+        return true
+      }
+      return false
+    }
+
+    // 登出
     const logout = async () => {
-      _logout()
-      userInfo.value = { ...userInfoState }
-      uni.removeStorageSync('userInfo')
-      uni.removeStorageSync('token')
-    }
-    /**
-     * 微信登录
-     */
-    const wxLogin = async () => {
-      // 获取微信小程序登录的code
-      const data = await getWxCode()
-      console.log('微信登录code', data)
+      await uniCloud.callFunction({
+        name: 'uni-id-cf',
+        data: { action: 'logout' },
+      })
 
-      const res = await _wxLogin(data)
-      await getUserInfo()
-      return res
+      uni.removeStorageSync('uni_id_token')
+      uni.removeStorageSync('uni_id_token_expired')
+      userInfo.value = { ...userInfoState }
     }
 
     return {
       userInfo,
-      login,
-      wxLogin,
-      getUserInfo,
-      setUserAvatar,
+      setUserInfo,
+      wxMiniProgramLogin,
+      checkLoginStatus,
       logout,
+      getUserInfo,
     }
   },
   {

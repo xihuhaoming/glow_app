@@ -1,65 +1,105 @@
-<script setup lang="ts">
-import { ref } from 'vue'
-import { uniCloudWeChatLogin } from '@/unicloud/cloud-functions/auth' // 假设您会将 UniCloud 认证相关代码放在这里
-// 处理微信一键授权的回调
-async function getPhoneNumberCallback(e: UniApp.GetPhoneNumberEvent) {
-  if (e.detail.errMsg === 'getPhoneNumber:ok') {
-    // 用户同意授权
-    const { code } = await uni.login({ provider: 'weixin' }) // 获取登录凭证 code
-    const { encryptedData, iv } = e.detail // 获取手机号加密数据
-
-    try {
-      // 调用 UniCloud 云函数进行后端处理
-      const result = await uniCloudWeChatLogin({
-        code,
-        encryptedData,
-        iv,
-      })
-      console.log('微信一键授权登录成功:', result)
-      // TODO: 根据后端返回的结果，进行用户状态更新、页面跳转等
-    }
-    catch (error) {
-      console.error('微信一键授权登录失败:', error)
-      // TODO: 错误处理，例如提示用户
+<!-- 使用 type="home" 属性设置首页，其他页面不需要设置，默认为page；推荐使用json5，更强大，且允许注释 -->
+<route lang="json5">
+  {
+    "layout": "default",
+    "style": {
+      "navigationBarTitleText": "登录"
     }
   }
-  else {
-    // 用户拒绝授权
-    console.log('用户拒绝微信一键授权')
-    // TODO: 提示用户或引导用户使用其他登录方式
+</route>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useUserStore } from '@/store'
+
+const userStore = useUserStore()
+
+// 处理微信登录
+async function handleWeixinLogin() {
+  try {
+    uni.showLoading({ title: '登录中...' })
+
+    // 调用store中的微信登录方法
+    const result = await userStore.wxMiniProgramLogin()
+
+    uni.hideLoading()
+    // 登录成功后跳转
+    uni.reLaunch({
+      url: '/pages/index/index',
+    })
+  }
+  catch (error) {
+    console.error('微信登录出错:', error)
+    uni.showToast({
+      title: '登录失败，请稍后再试',
+      icon: 'none',
+    })
   }
 }
 
-function traditionalLogin() {
-  // TODO: 跳转到传统登录页面或执行传统登录逻辑
-  console.log('跳转到传统登录')
+// 获取手机号(通过微信开放能力)
+async function getPhoneNumberCallback(e) {
+  console.log('getPhoneNumberCallback', e)
+  if (e.detail.errMsg === 'getPhoneNumber:ok') {
+    // 获取登录凭证
+    const { code } = await uni.login({ provider: 'weixin' })
+    const { encryptedData, iv } = e.detail
+
+    // 调用云函数绑定手机号
+    const result = await uniCloud.callFunction({
+      name: 'uni-id-cf',
+      data: {
+        action: 'bindMobileByMpWeixin',
+        params: {
+          code,
+          encryptedData,
+          iv,
+        },
+      },
+    })
+
+    console.log('绑定手机号结果:', result)
+    if (result.result.code === 0) {
+      uni.showToast({
+        title: '手机号绑定成功',
+        icon: 'success',
+      })
+    }
+    else {
+      uni.showToast({
+        title: result.result.message || '绑定失败',
+        icon: 'none',
+      })
+    }
+  }
 }
 </script>
 
 <template>
   <view class="login-container">
-    <button open-type="getPhoneNumber" @getphonenumber="getPhoneNumberCallback">
-      微信一键授权登录
+    <!-- 微信登录按钮 -->
+    <button type="primary" @click="handleWeixinLogin">
+      微信一键登录
     </button>
-    <button @click="traditionalLogin">
-      传统登录
+
+    <!-- 获取微信手机号按钮 -->
+    <button open-type="getPhoneNumber" @getphonenumber="getPhoneNumberCallback">
+      微信手机号授权登录
     </button>
   </view>
 </template>
 
-  <style>
-  .login-container {
+<style>
+.login-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
 }
+
 button {
   margin: 10px;
-  padding: 10px 20px;
-  background-color: #04be02;
-  color: white;
-  border-radius: 5px;
+  width: 80%;
 }
 </style>
