@@ -35,8 +35,6 @@ export const tabbarList = [
     pagePath: 'pages/about/about',
     text: '关于',
     icon: 'i-carbon-code',
-    // 注意 unocss 的图标需要在 页面上引入一下，或者配置到 unocss.config.ts 的 safelist 中
-    iconType: 'unocss',
   },
   // {
   //   pagePath: 'pages/my/index',

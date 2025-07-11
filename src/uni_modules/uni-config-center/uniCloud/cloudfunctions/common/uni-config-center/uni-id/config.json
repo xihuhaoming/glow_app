@@ -1,31 +1,115 @@
 {
-	"passwordSecret": "4654654asdasd98a4s98d4as984d16asd546asd4s8a9d",
-	"tokenSecret": "879asdw3d4s98d4as984d16asd546asd4s8a9d",
+	"passwordSecret": [{
+		"type": "hmac-sha256",
+		"version": 1
+	}],
+	"passwordStrength": "medium",
+	"tokenSecret": "xxxm12345679lskdjflksdjfjsaodfijosdpifjasdasdioo23wer234234",
+	"requestAuthSecret": "xxxm12345679lskdjflksdjfjsaodfijosdpifjioo23234234",
 	"tokenExpiresIn": 7200,
+	"tokenExpiresThreshold": 3600,
+	"maxTokenLength": 10,
 	"passwordErrorLimit": 6,
 	"passwordErrorRetryTime": 3600,
+	"autoSetInviteCode": false,
+	"forceInviteCode": false,
+	"idCardCertifyLimit": 1,
+	"realNameCertifyLimit": 5,
+	"sensitiveInfoEncryptSecret": "",
+	"frvNeedAlivePhoto": false,
+	"userRegisterDefaultRole": [],
 	"app": {
-		"tokenExpiresIn": 2592000
-	},
-	"mp-weixin": {
+		"tokenExpiresIn": 2592000,
+		"tokenExpiresThreshold": 864000,
 		"oauth": {
+
 			"weixin": {
 				"appid": "wx4b1081e94184f8c9",
-				"appsecret": "db7d1e14faeee87082cdb8c7bf7f668a"
+				"appsecret": "df72c1fc023efa138d13069a727472b3"
+			},
+
+			"qq": {
+				"appid": "",
+				"appsecret": ""
+			},
+			"apple": {
+				"bundleId": ""
+			},
+			"huawei": {
+				"clientId": "",
+				"clientSecret": ""
+			}
+		}
+	},
+	"web": {
+		"tokenExpiresIn": 7200,
+		"tokenExpiresThreshold": 3600,
+		"oauth": {
+			"weixin-h5": {
+				"appid": "",
+				"appsecret": ""
+			},
+			"weixin-web": {
+				"appid": "",
+				"appsecret": ""
+			}
+		}
+	},
+	"mp-weixin": {
+		"tokenExpiresIn": 259200,
+		"tokenExpiresThreshold": 86400,
+		"oauth": {
+
+			"weixin": {
+				"appid": "wx4b1081e94184f8c9",
+				"appsecret": "df72c1fc023efa138d13069a727472b3"
+			}
+		}
+	},
+	"mp-qq": {
+		"tokenExpiresIn": 259200,
+		"tokenExpiresThreshold": 86400,
+		"oauth": {
+
+			"qq": {
+				"appid": "",
+				"appsecret": ""
+			}
+		}
+	},
+	"mp-alipay": {
+		"tokenExpiresIn": 259200,
+		"tokenExpiresThreshold": 86400,
+		"oauth": {
+
+			"alipay": {
+				"appid": "",
+				"privateKey": "",
+				"keyType": "PKCS8"
+			}
+		}
+	},
+	"mp-harmony": {
+		"oauth": {
+			"huawei": {
+				"clientId": "",
+				"clientSecret": ""
 			}
 		}
 	},
 	"service": {
 		"sms": {
-			"name": "你的短信供应商名称",
+			"name": "",
 			"codeExpiresIn": 180,
-			"smsKey": "短信密钥key",
-			"smsSecret": "短信密钥secret"
+			"scene": {
+				"bind-mobile-by-sms": {
+					"templateId": "",
+					"codeExpiresIn": 240
+				}
+			}
 		},
 		"univerify": {
-			"appid": "univerifyAppid",
-			"apiKey": "univerifyApiKey",
-			"apiSecret": "univerifyApiSecret"
+			"appid": ""
 		}
 	}
 }

@@ -39,8 +39,7 @@
         "selectedIconPath": "static/tabbar/exampleHL.png",
         "pagePath": "pages/about/about",
         "text": "关于",
-        "icon": "i-carbon-code",
-        "iconType": "unocss"
+        "icon": "i-carbon-code"
       }
     ]
   },

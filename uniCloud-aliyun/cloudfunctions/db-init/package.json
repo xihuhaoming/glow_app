@@ -1,6 +1,0 @@
-{
-  "name": "db-init",
-  "version": "1.0.0",
-  "description": "数据库初始化云函数",
-  "main": "index.js"
-}

@@ -3,42 +3,36 @@ import { onHide, onLaunch, onShow } from '@dcloudio/uni-app'
 import { usePageAuth } from '@/hooks/usePageAuth'
 import { useUserStore } from '@/store'
 
-import 'abortcontroller-polyfill/dist/abortcontroller-polyfill-only'
+import uniIdPageInit from '@/uni_modules/uni-id-pages/init.js'
 
 usePageAuth()
 onLaunch(async () => {
   console.log('App Launch')
   const userStore = useUserStore()
 
-  try {
-    // 检查登录状态
-    if (userStore.checkLoginStatus()) {
-      const result = await uniCloud.callFunction({
-        name: 'uni-id-cf',
-        data: { action: 'checkToken' },
-      })
+  await uniIdPageInit()
 
-      if (result.result.code !== 0) {
-        console.log('token无效，准备跳转到登录页')
-        // 清除登录状态
-        userStore.logout()
-        // 明确跳转到登录页
-        const loginUrl = '/pages/login/login' // 使用硬编码路径确保正确
-        uni.reLaunch({ url: loginUrl }) // 使用reLaunch确保跳转生效
-        // 重要：防止后续代码执行
-      }
+  try {
+    console.log('[onLaunch] 准备检查登录状态...')
+    if (userStore.checkLoginStatus()) {
+      console.log('[onLaunch] 状态为已登录，将通过getUserInfo()验证token...')
+      const userInfoRes = await userStore.getUserInfo()
+      console.log('[onLaunch] Token验证成功，用户信息:', userInfoRes)
     }
     else {
-      // 没有token或已过期，直接跳转
-      console.log('没有token或已过期，准备跳转到登录页')
-      const loginUrl = '/pages/login/login'
-      uni.reLaunch({ url: loginUrl })
+      console.log('[onLaunch] 状态为未登录，将跳转到登录页。')
+      uni.reLaunch({ url: '/pages/login/login' })
     }
   }
   catch (error) {
-    console.error('检查登录状态失败:', error)
-    // 出错时也跳转登录页
+    console.error('[onLaunch] CATCH块：验证登录状态失败:', error)
+    console.log('[onLaunch] 将调用logout()清理无效状态...')
+    await userStore.logout()
+    console.log('[onLaunch] 清理完毕，将跳转到登录页...')
     uni.reLaunch({ url: '/pages/login/login' })
+  }
+  finally {
+    console.log('--- App Launch END ---')
   }
 })
 onShow(() => {

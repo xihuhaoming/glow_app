@@ -19,12 +19,17 @@ async function handleWeixinLogin() {
   try {
     uni.showLoading({ title: '登录中...' })
 
-    // 调用store中的微信登录方法
-    const result = await userStore.wxMiniProgramLogin()
+    const userProfileRes = await uni.getUserProfile({
+      desc: '用于完善会员资料',
+      lang: 'zh_CN',
+    })
+
+    // 2. 授权成功后，将获取到的 userInfo 交给 store 处理后续的登录流程
+    await userStore.loginWithWechat(userProfileRes.userInfo)
 
     uni.hideLoading()
     // 登录成功后跳转
-    uni.reLaunch({
+    uni.switchTab({
       url: '/pages/index/index',
     })
   }
@@ -45,17 +50,11 @@ async function getPhoneNumberCallback(e) {
     const { code } = await uni.login({ provider: 'weixin' })
     const { encryptedData, iv } = e.detail
 
-    // 调用云函数绑定手机号
-    const result = await uniCloud.callFunction({
-      name: 'uni-id-cf',
-      data: {
-        action: 'bindMobileByMpWeixin',
-        params: {
-          code,
-          encryptedData,
-          iv,
-        },
-      },
+    const uniIdCo = uniCloud.importObject('uni-id-co')
+    const result = await uniIdCo.bindMobileByMpWeixin({
+      code,
+      encryptedData,
+      iv,
     })
 
     console.log('绑定手机号结果:', result)
