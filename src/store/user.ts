@@ -2,13 +2,22 @@
 
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-
+import {
+  mutations,
+} from '@/uni_modules/uni-id-pages/common/store.js'
 // 用户信息初始状态
 const userInfoState = {
   id: 0,
   username: '',
   avatar: '/static/images/default-avatar.png',
   token: '',
+  nickname: '',
+  gender: '',
+  country: '',
+  province: '',
+  city: '',
+  language: '',
+  comment: '',
 }
 
 export const useUserStore = defineStore(
@@ -23,11 +32,8 @@ export const useUserStore = defineStore(
       userInfo.value = val
     }
 
-    const getUserInfo = async () => {
-      console.log('--- getUserInfo START ---')
-      const result = await uniIdCo.getAccountInfo()
-      console.log('--- getUserInfo END ---')
-      return result
+    function getUserInfo() {
+      return userInfo.value
     }
 
     const loginWithWechat = async (userInfo) => {
@@ -60,6 +66,13 @@ export const useUserStore = defineStore(
             username: userInfo.nickName,
             avatar: userInfo.avatarUrl,
             token: loginResult.newToken.token,
+            tokenExpired: loginResult.newToken.tokenExpired,
+            gender: userInfo.gender,
+            country: userInfo.country,
+            province: userInfo.province,
+            city: userInfo.city,
+            language: userInfo.language,
+            nickname: userInfo.nickName,
           })
 
           return loginResult
@@ -93,22 +106,7 @@ export const useUserStore = defineStore(
 
     // 登出
     const logout = async () => {
-      console.log('--- logout START ---')
-      try {
-        await uniIdCo.logout()
-        console.log('[logout] uniIdCo.logout() 调用成功。')
-      }
-      catch (e) {
-        console.error('[logout] uniIdCo.logout() 调用失败:', e)
-      }
-
-      console.log('[logout] 正在从storage中清除token...')
-      uni.removeStorageSync('uni_id_token')
-      uni.removeStorageSync('uni_id_token_expired')
-      const tokenAfterLogout = uni.getStorageSync('uni_id_token')
-      console.log(`[logout] 清除后检查token: ${tokenAfterLogout || 'null'}`)
-      userInfo.value = { ...userInfoState }
-      console.log('--- logout END ---')
+      mutations.logout()
     }
 
     return {

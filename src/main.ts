@@ -6,7 +6,10 @@ import { prototypeInterceptor, requestInterceptor, routeInterceptor } from './in
 import store from './store'
 import '@/style/index.scss'
 import 'virtual:uno.css'
-
+// 创建全局事件总线
+uni.$on('userProfileUpdated', () => {
+  // 空函数，仅用于注册事件
+})
 export function createApp() {
   const app = createSSRApp(App)
   app.use(store)

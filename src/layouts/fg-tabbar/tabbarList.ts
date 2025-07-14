@@ -25,23 +25,19 @@ export const tabbarList = [
     selectedIconPath: 'static/tabbar/homeHL.png',
     pagePath: 'pages/index/index',
     text: '首页',
-    icon: 'home',
-    // 选用 UI  框架自带的 icon时，iconType 为 uiLib
-    iconType: 'uiLib',
   },
   {
     iconPath: 'static/tabbar/example.png',
     selectedIconPath: 'static/tabbar/exampleHL.png',
     pagePath: 'pages/about/about',
     text: '关于',
-    icon: 'i-carbon-code',
   },
-  // {
-  //   pagePath: 'pages/my/index',
-  //   text: '我的',
-  //   icon: '/static/logo.svg',
-  //   iconType: 'local',
-  // },
+  {
+    iconPath: 'static/tabbar/personal.png',
+    selectedIconPath: 'static/tabbar/personalHL.png',
+    pagePath: 'pages/my/my',
+    text: '我的',
+  },
   // {
   //   pagePath: 'pages/mine/index',
   //   text: '我的',

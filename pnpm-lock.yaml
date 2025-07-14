@@ -141,7 +141,7 @@ importers:
         specifier: ^4.28.0
         version: 4.41.1
       '@types/node':
-        specifier: ^20.17.9
+        specifier: ^20.19.0
         version: 20.19.0
       '@types/wechat-miniprogram':
         specifier: ^3.4.8
@@ -334,6 +334,12 @@ importers:
   src/uni_modules/uni-scss: {}
 
   src/uni_modules/uni-transition: {}
+
+  uniCloud-aliyun/cloudfunctions/update-profile:
+    dependencies:
+      uni-id-common:
+        specifier: file:../../../src/uni_modules/uni-id-common/uniCloud/cloudfunctions/common/uni-id-common
+        version: link:../../../src/uni_modules/uni-id-common/uniCloud/cloudfunctions/common/uni-id-common
 
 packages:
 

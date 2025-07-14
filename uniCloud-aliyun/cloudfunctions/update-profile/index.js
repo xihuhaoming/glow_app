@@ -26,6 +26,8 @@ exports.main = async (event, context) => {
     }
   }
 
+  console.log(userInfo)
+
   // 3. 准备数据并更新数据库
   const dataToUpdate = {
     nickname: userInfo.nickName,
