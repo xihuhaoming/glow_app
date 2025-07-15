@@ -35,7 +35,34 @@ export const useUserStore = defineStore(
     function getUserInfo() {
       return userInfo.value
     }
-
+    // ... 省略前面代码 ...
+    const fetchUserInfoFromDB = async () => {
+      try {
+        const token = uni.getStorageSync('uni_id_token')
+        if (!token)
+          throw new Error('未获取到token')
+        const result = await uniCloud.callFunction({
+          name: 'update-profile',
+          data: { uniIdToken: token },
+        })
+        if (result.result && result.result.data && result.result.data.length > 0) {
+          const dbUserInfo = result.result.data[0]
+          setUserInfo({
+            ...userInfoState,
+            ...dbUserInfo,
+            token,
+          })
+          return dbUserInfo
+        }
+        else {
+          throw new Error('未查到用户信息')
+        }
+      }
+      catch (e) {
+        console.error('获取数据库用户信息失败', e)
+        throw e
+      }
+    }
     const loginWithWechat = async (userInfo) => {
       try {
         // 1. 获取登录凭证 code
@@ -50,31 +77,10 @@ export const useUserStore = defineStore(
           uni.setStorageSync('uni_id_token', loginResult.newToken.token)
           uni.setStorageSync('uni_id_token_expired', loginResult.newToken.tokenExpired)
 
-          // 3. 【客户端再次调用】我们新的云函数来更新用户信息
-          console.log('正在调用云函数 update-profile...')
-          await uniCloud.callFunction({
-            name: 'update-profile',
-            data: {
-              userInfo,
-            },
-          })
-          console.log('用户信息更新成功！')
+          console.log('loginResult', loginResult)
 
-          // 4. 更新前端 Pinia 的状态
-          setUserInfo({
-            id: loginResult.uid,
-            username: userInfo.nickName,
-            avatar: userInfo.avatarUrl,
-            token: loginResult.newToken.token,
-            tokenExpired: loginResult.newToken.tokenExpired,
-            gender: userInfo.gender,
-            country: userInfo.country,
-            province: userInfo.province,
-            city: userInfo.city,
-            language: userInfo.language,
-            nickname: userInfo.nickName,
-          })
-
+          // 登录成功后，拉取数据库用户信息
+          await fetchUserInfoFromDB()
           return loginResult
         }
         else {
@@ -89,18 +95,12 @@ export const useUserStore = defineStore(
 
     // 检查登录状态
     const checkLoginStatus = () => {
-      console.log('--- checkLoginStatus START ---')
       const token = uni.getStorageSync('uni_id_token')
       const tokenExpired = uni.getStorageSync('uni_id_token_expired')
-      console.log(`[checkLoginStatus] 检查到 token: ${token || 'null'}`)
 
       if (token && tokenExpired && tokenExpired > Date.now()) {
-        console.log('[checkLoginStatus] 检查结果: true (已登录)')
-        console.log('--- checkLoginStatus END ---')
         return true
       }
-      console.log('[checkLoginStatus] 检查结果: false (未登录或已过期)')
-      console.log('--- checkLoginStatus END ---')
       return false
     }
 
@@ -116,6 +116,7 @@ export const useUserStore = defineStore(
       checkLoginStatus,
       logout,
       getUserInfo,
+      fetchUserInfoFromDB,
     }
   },
   {

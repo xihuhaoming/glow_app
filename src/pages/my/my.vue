@@ -19,7 +19,6 @@ defineOptions({
 const userStore = useUserStore()
 
 const userInfo = ref(userStore.getUserInfo())
-// const userInfo = userStore.getUserInfo()
 const statusBarHeight = ref(0)
 
 console.log('userInfo', userInfo)
@@ -61,6 +60,12 @@ function goToLogin() {
     url: '/pages/login/login',
   })
 }
+
+function goToVip() {
+  uni.navigateTo({
+    url: '/pages/vip',
+  })
+}
 </script>
 
 <template>
@@ -76,7 +81,7 @@ function goToLogin() {
         <view class="user-name">
           <view class="nickname-row">
             <text class="nickname">
-              {{ isLoggedIn ? userInfo.nickname : '美叶e勤川' }}
+              {{ isLoggedIn ? userInfo.nickname || userInfo.username : '美叶e勤川' }}
             </text>
             <text class="vip-tag">
               VIP会员
@@ -92,10 +97,10 @@ function goToLogin() {
       <!-- VIP会员区域 -->
       <view class="vip-area">
         <view class="vip-left">
-          <up-icon name="arrow-right" size="12" color="#ffffff" />
+          <!-- <up-icon name="arrow-right" size="12" color="#ffffff" /> -->
           <text>开通会员享VIP会员</text>
         </view>
-        <button class="vip-btn">
+        <button class="vip-btn" @click="goToVip">
           立即开通
         </button>
       </view>

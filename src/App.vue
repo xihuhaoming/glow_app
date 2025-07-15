@@ -4,7 +4,10 @@ import { usePageAuth } from '@/hooks/usePageAuth'
 import { useUserStore } from '@/store'
 
 import uniIdPageInit from '@/uni_modules/uni-id-pages/init.js'
-
+// 在您的页面中导入云对象
+const uniIdCo = uniCloud.importObject('uni-id-co', {
+  customUI: true, // 可选参数，使用自定义UI
+})
 usePageAuth()
 onLaunch(async () => {
   console.log('App Launch')
@@ -15,9 +18,14 @@ onLaunch(async () => {
   try {
     console.log('[onLaunch] 准备检查登录状态...')
     if (userStore.checkLoginStatus()) {
-      console.log('[onLaunch] 状态为已登录，将通过getUserInfo()验证token...')
-      const userInfoRes = await userStore.getUserInfo()
-      console.log('[onLaunch] Token验证成功，用户信息:', userInfoRes)
+      try {
+        await userStore.fetchUserInfoFromDB()
+        console.log('[onLaunch] 已同步数据库用户信息到store')
+      }
+      catch (e) {
+        console.error('[onLaunch] 同步数据库用户信息失败', e)
+      // 可选：userStore.logout(); uni.reLaunch({ url: '/pages/login/login' })
+      }
     }
     else {
       console.log('[onLaunch] 状态为未登录，将跳转到登录页。')
@@ -35,6 +43,18 @@ onLaunch(async () => {
     console.log('--- App Launch END ---')
   }
 })
+
+// 同步用户信息的方法
+// async function syncUserInfo() {
+//   try {
+//     const result = await uniIdCo.getAccountInfo()
+//     console.log('用户信息:', result)
+//     return result
+//   }
+//   catch (error) {
+//     console.error('同步用户信息失败', error)
+//   }
+// }
 onShow(() => {
   console.log('App Show')
 })
