@@ -19,22 +19,13 @@ async function handleWeixinLogin() {
   try {
     uni.showLoading({ title: '登录中...' })
 
-    const userProfileRes = await uni.getUserProfile({
-      desc: '用于完善会员资料',
-      lang: 'zh_CN',
-    })
+    // const userProfileRes = await uni.getUserProfile({
+    //   desc: '用于完善会员资料',
+    //   lang: 'zh_CN',
+    // })
 
     // 2. 授权成功后，将获取到的 userInfo 交给 store 处理后续的登录流程
-    await userStore.loginWithWechat(userProfileRes.userInfo)
-
-    const result = await uniCloud.callFunction({
-      name: 'update-user-info',
-      data: {
-        userInfo: userProfileRes.userInfo,
-      },
-    })
-
-    console.log('result', result)
+    await userStore.loginWithWechat()
 
     uni.hideLoading()
     // 登录成功后跳转

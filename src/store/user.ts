@@ -63,7 +63,7 @@ export const useUserStore = defineStore(
         throw e
       }
     }
-    const loginWithWechat = async (userInfo) => {
+    const loginWithWechat = async () => {
       try {
         // 1. 获取登录凭证 code
         const { code } = await uni.login({ provider: 'weixin' })

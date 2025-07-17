@@ -49,6 +49,11 @@ onLoad(() => {
 })
 
 console.log('index')
+
+const value6 = ref(0)
+function click1(e) {
+  console.log('click1', e)
+}
 </script>
 
 <template>

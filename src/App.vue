@@ -81,4 +81,13 @@ image {
   height: 100%;
   vertical-align: middle;
 }
+// Tabbar样式
+.tabbar,
+.u-tabbar,
+.bottom-tabbar,
+.uni-tabbar,
+.uni-tabbar__container {
+  background: #fff !important;
+  box-shadow: 0 -2rpx 16rpx 0 rgba(0, 0, 0, 0.04);
+}
 </style>

@@ -25,25 +25,25 @@ export const tabbarList = [
     selectedIconPath: 'static/tabbar/homeHL.png',
     pagePath: 'pages/index/index',
     text: '首页',
+    iconType: 'uiLib',
+    icon: 'home',
   },
   {
     iconPath: 'static/tabbar/example.png',
     selectedIconPath: 'static/tabbar/exampleHL.png',
     pagePath: 'pages/about/about',
     text: '关于',
+    iconType: 'uiLib',
+    icon: 'home',
   },
   {
     iconPath: 'static/tabbar/personal.png',
     selectedIconPath: 'static/tabbar/personalHL.png',
     pagePath: 'pages/my/my',
     text: '我的',
+    iconType: 'uiLib',
+    icon: 'home',
   },
-  // {
-  //   pagePath: 'pages/mine/index',
-  //   text: '我的',
-  //   icon: 'iconfont icon-my',
-  //   iconType: 'iconfont',
-  // },
 ]
 
 // NATIVE_TABBAR(1) 和 CUSTOM_TABBAR_WITH_CACHE(2) 时，需要tabbar缓存
@@ -53,8 +53,9 @@ export const cacheTabbarEnable = selectedTabbarStrategy === TABBAR_MAP.NATIVE_TA
 const _tabbar = {
   color: '#999999',
   selectedColor: '#018d71',
-  backgroundColor: '#F8F8F8',
-  borderStyle: 'black',
+  backgroundColor: '#fff',
+  borderStyle: 'white',
+  boxShadow: '0 -10rpx 10rpx rgba($color: #000000, $alpha: 0.4)',
   height: '50px',
   fontSize: '10px',
   iconWidth: '24px',

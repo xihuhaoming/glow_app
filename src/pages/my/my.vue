@@ -2,8 +2,7 @@
   {
     layout: 'tabbar',
     style: {
-      navigationBarTitleText: '我的',
-      navigationStyle: 'custom' // 使用自定义导航栏以匹配截图
+      navigationBarTitleText: '我的'
     },
   }
   </route>
@@ -63,7 +62,7 @@ function goToLogin() {
 
 function goToVip() {
   uni.navigateTo({
-    url: '/pages/vip',
+    url: '/pages/my/vip',
   })
 }
 </script>
@@ -198,51 +197,30 @@ function goToVip() {
         </view>
       </view>
     </view>
-
-    <!-- 底部工具栏 -->
-    <view class="bottom-tools">
-      <view class="tool-item">
-        <up-icon name="home" size="24" color="#00c38d" class="tool-icon" />
-        <view class="tool-text">
-          <text>开会WebMeet</text>
-          <text class="tool-desc">
-            免费视频会议
-          </text>
-        </view>
-      </view>
-      <view class="tool-item">
-        <up-icon name="chat" size="24" color="#00c38d" class="tool-icon" />
-        <view class="tool-text">
-          <text>开会Talk</text>
-          <text class="tool-desc">
-            语音会议沟通
-          </text>
-        </view>
-      </view>
-    </view>
   </view>
 </template>
 
-  <style lang="scss">
-  .my-page {
-  min-height: 100vh;
-  background-color: #f5f5f5;
+<style lang="scss">
+.my-page {
+  min-height: calc(100vh - 40rpx);
+  background: linear-gradient(135deg, #e0ffe9 0%, #f3eaff 100%);
+  padding-bottom: 40rpx;
+  box-shadow: 0 -10rpx 10rpx rgba($color: #000000, $alpha: 0.4);
 }
 
 .status-bar {
-  background-color: #00c38d; /* 绿色状态栏 */
+  background: transparent;
 }
 
 .user-info-area {
-  background-color: #00c38d; /* 绿色背景 */
-  padding: 20rpx 30rpx 0;
+  margin: 24rpx 24rpx 0 24rpx;
   position: relative;
 }
 
 .user-header {
   display: flex;
   align-items: center;
-  position: relative;
+  margin-bottom: 24rpx;
 }
 
 .avatar {
@@ -250,6 +228,7 @@ function goToVip() {
   height: 100rpx;
   border-radius: 50%;
   border: 2rpx solid #ffffff;
+  box-shadow: 0 2rpx 8rpx 0 rgba(0, 0, 0, 0.08);
 }
 
 .user-name {
@@ -264,45 +243,46 @@ function goToVip() {
 
 .nickname {
   font-size: 32rpx;
-  color: #ffffff;
+  color: #222;
   font-weight: bold;
   margin-right: 15rpx;
 }
 
 .vip-tag {
   font-size: 20rpx;
-  background-color: #9a6027;
-  color: #fff8e7;
+  background: linear-gradient(90deg, #ffe0b2 0%, #ffd600 100%);
+  color: #9a6027;
   padding: 2rpx 12rpx;
   border-radius: 20rpx;
 }
 
 .user-desc {
   font-size: 24rpx;
-  color: rgba(255, 255, 255, 0.8);
+  color: #888;
   margin-top: 4rpx;
 }
 
 .vip-area {
-  background: linear-gradient(to left, #333, #111111);
-  border-radius: 12rpx 12rpx 0 0;
-  padding: 30rpx 20rpx;
+  background: linear-gradient(90deg, #fffbe7 0%, #fff6e0 100%);
+  border-radius: 16rpx;
+  padding: 24rpx 24rpx;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 30rpx;
+  margin-top: 0;
+  box-shadow: 0 2rpx 8rpx 0 rgba(0, 0, 0, 0.04);
 }
 
 .vip-left {
   display: flex;
   align-items: center;
   gap: 10rpx;
-  color: #ffffff;
+  color: #9a6027;
 }
 
 .vip-btn {
-  background-color: #ffd600;
-  color: #111111;
+  background: linear-gradient(90deg, #ffd600 0%, #ffe0b2 100%);
+  color: #9a6027;
   font-size: 24rpx;
   padding: 6rpx 20rpx;
   border-radius: 30rpx;
@@ -310,10 +290,14 @@ function goToVip() {
   margin: auto 0;
   height: auto;
   width: 150rpx;
+  box-shadow: 0 2rpx 8rpx 0 rgba(0, 0, 0, 0.06);
 }
 
 .icon-menu {
-  background-color: #ffffff;
+  background: #fff;
+  margin: 24rpx 24rpx 0 24rpx;
+  border-radius: 24rpx;
+  box-shadow: 0 4rpx 16rpx 0 rgba(0, 0, 0, 0.06);
   padding: 30rpx 20rpx;
   display: flex;
   justify-content: space-around;
@@ -333,8 +317,10 @@ function goToVip() {
 }
 
 .menu-list {
-  background-color: #ffffff;
-  margin-top: 20rpx;
+  background: #fff;
+  margin: 24rpx 24rpx 0 24rpx;
+  border-radius: 24rpx;
+  box-shadow: 0 4rpx 16rpx 0 rgba(0, 0, 0, 0.06);
 }
 
 .menu-item {
@@ -343,6 +329,9 @@ function goToVip() {
   align-items: center;
   padding: 30rpx;
   border-bottom: 1rpx solid #f5f5f5;
+  &:last-child {
+    border-bottom: 0;
+  }
 }
 
 .menu-left {
@@ -357,26 +346,33 @@ function goToVip() {
 }
 
 .new-tag {
-  background-color: #ff5a5f;
-  color: #ffffff;
+  background: #ff5a5f;
+  color: #fff;
   font-size: 20rpx;
   padding: 2rpx 12rpx;
   border-radius: 6rpx;
 }
 
 .bottom-tools {
-  background-color: #ffffff;
-  margin-top: 20rpx;
+  background: #fff;
+  margin: 32rpx 24rpx 24rpx 24rpx;
   padding: 30rpx;
   display: flex;
   justify-content: space-between;
+  border-radius: 24rpx;
+  box-shadow: 0 4rpx 16rpx 0 rgba(0, 0, 0, 0.06);
+  position: fixed;
+  left: 24rpx;
+  right: 24rpx;
+  bottom: 24rpx;
+  z-index: 10;
 }
 
 .tool-item {
   display: flex;
   align-items: center;
   width: 45%;
-  background-color: #f8f8f8;
+  background: #f8f8f8;
   padding: 20rpx;
   border-radius: 12rpx;
 }

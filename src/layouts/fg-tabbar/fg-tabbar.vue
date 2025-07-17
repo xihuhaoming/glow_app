@@ -55,7 +55,7 @@ onLoad(() => {
       />
 
       <up-tabbar-item
-        v-else-if="item.iconType === 'unocss' || item.iconType === 'iconfont'"
+        v-else-if="item.iconType === 'unocss'"
         :text="item.text"
         :name="idx"
       >

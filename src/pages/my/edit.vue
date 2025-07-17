@@ -1,8 +1,8 @@
 <route lang="json5">
     {
+      layout: 'custom',
       style: {
-        navigationBarTitleText: '编辑个人资料',
-        navigationStyle: 'default'
+        navigationBarTitleText: '编辑个人资料'
       },
     }
   </route>
@@ -154,6 +154,7 @@ async function saveUserInfo() {
 </script>
 
 <template>
+  <up-navbar title="编辑个人资料" :auto-back="true" />
   <view class="edit-page">
     <!-- 头像区域 -->
     <view class="avatar-section">

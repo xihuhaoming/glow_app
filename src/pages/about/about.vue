@@ -29,6 +29,7 @@ function gotoAlova() {
 </script>
 
 <template>
+  <up-navbar title="关于" auto-back />
   <view>
     <view class="mt-8 text-center text-3xl">
       鸽友们好，我是
